@@ -1,0 +1,201 @@
+name: Feature Request
+description: Suggest a new feature or enhancement for the Chigee XR2 OBD2 Module
+title: "[FEATURE] "
+labels: ["enhancement", "needs-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ?? Feature Request
+        Thank you for suggesting a new feature! Please provide detailed information about your idea.
+        
+        **Safety Consideration**: All features must maintain the safety-first approach of this project.
+
+  - type: checkboxes
+    id: safety-consideration
+    attributes:
+      label: Safety Impact Assessment
+      description: Please consider safety implications
+      options:
+        - label: This feature maintains isolation testing capabilities
+          required: true
+        - label: This feature does not bypass existing safety mechanisms
+          required: true
+        - label: I have considered potential vehicle safety impacts
+          required: true
+
+  - type: dropdown
+    id: feature-category
+    attributes:
+      label: Feature Category
+      description: What type of feature is this?
+      options:
+        - New OBD2 PID support
+        - CAN database enhancement
+        - Bluetooth/connectivity improvement
+        - Hardware support addition
+        - Documentation improvement
+        - Testing/validation enhancement
+        - User interface improvement
+        - Performance optimization
+        - Safety feature addition
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: project-phase
+    attributes:
+      label: Target Project Phase
+      description: Which project phase would this feature support?
+      options:
+        - Phase 2 - Isolation Testing
+        - Phase 3 - CAN Integration
+        - Phase 4 - Chigee Pairing
+        - Phase 5 - Vehicle Testing
+        - Phase 6 - Optimization
+        - Phase 7 - Validation
+        - Phase 8 - Production
+        - Phase 9 - Deployment
+        - All phases
+        - New phase
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Description
+      description: What problem does this feature solve?
+      placeholder: "Describe the problem or limitation this feature would address"
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe your proposed solution in detail
+      placeholder: "Explain how you think this feature should work"
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions
+      description: Have you considered alternative approaches?
+      placeholder: "Describe any alternative solutions you've considered"
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority Level
+      description: How important is this feature?
+      options:
+        - Critical (safety-related or blocking)
+        - High (significantly improves functionality)
+        - Medium (nice to have improvement)
+        - Low (minor enhancement)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Implementation Complexity
+      description: How complex do you think this feature would be to implement?
+      options:
+        - Simple (small code change)
+        - Medium (moderate development effort)
+        - Complex (significant development required)
+        - Very Complex (major architectural changes)
+        - Unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: Implementation Ideas
+      description: Do you have ideas about how this could be implemented?
+      placeholder: "Share any technical thoughts about implementation"
+
+  - type: textarea
+    id: testing
+    attributes:
+      label: Testing Strategy
+      description: How should this feature be tested?
+      placeholder: "Describe how we can safely test this feature"
+
+  - type: dropdown
+    id: vehicle-support
+    attributes:
+      label: Vehicle Compatibility
+      description: Which vehicles should this feature support?
+      options:
+        - Husqvarna Svartpilen 401 only
+        - KTM Duke 390 only
+        - Both Svartpilen 401 and Duke 390
+        - All KTM/Husqvarna models
+        - Additional motorcycle brands
+        - Universal/brand-agnostic
+    validations:
+      required: false
+
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: Use Cases
+      description: Provide specific examples of how this feature would be used
+      placeholder: |
+        Example scenarios:
+        1. User wants to...
+        2. Developer needs to...
+        3. System should...
+
+  - type: textarea
+    id: documentation
+    attributes:
+      label: Documentation Requirements
+      description: What documentation would be needed for this feature?
+      placeholder: "Consider user guides, technical docs, safety warnings, etc."
+
+  - type: input
+    id: related-issues
+    attributes:
+      label: Related Issues
+      description: Are there any related issues or discussions?
+      placeholder: "e.g., #123, #456"
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context, screenshots, or examples
+      placeholder: "Include any additional information that would help understand this request"
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution Interest
+      description: Are you interested in contributing to this feature?
+      options:
+        - label: I would like to work on implementing this feature
+        - label: I can help with testing this feature
+        - label: I can help with documentation for this feature
+        - label: I can provide domain expertise (vehicle/hardware knowledge)
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched existing issues to ensure this is not a duplicate
+          required: true
+        - label: I have considered the safety implications of this feature
+          required: true
+        - label: I have provided sufficient detail for evaluation
+          required: true
+        - label: This feature aligns with the project's safety-first philosophy
+          required: true

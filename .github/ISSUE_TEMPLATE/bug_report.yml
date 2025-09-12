@@ -1,0 +1,152 @@
+name: Bug Report
+description: Report a bug or issue with the Chigee XR2 OBD2 Module
+title: "[BUG] "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ??? Safety First
+        **IMPORTANT**: If this bug involves vehicle electronics or safety systems, please include detailed safety information and testing methodology.
+        
+        Thank you for reporting a bug! Please provide detailed information to help us understand and reproduce the issue.
+
+  - type: checkboxes
+    id: safety-check
+    attributes:
+      label: Safety Verification
+      description: Please confirm safety considerations
+      options:
+        - label: I have tested this issue in ISOLATION MODE (TEST_MODE = true) first
+          required: true
+        - label: This issue does not involve connecting to a real vehicle without proper safety precautions
+          required: true
+        - label: I have not bypassed any safety features in my testing
+          required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: What version of the code are you using?
+      placeholder: "e.g., 1.0.0, commit hash, or branch name"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: hardware
+    attributes:
+      label: Hardware Configuration
+      description: What hardware are you using?
+      options:
+        - ESP32-DevKitC + MCP2515
+        - ESP32-WROOM-32D + MCP2515
+        - Other ESP32 variant + MCP2515
+        - Custom PCB
+        - Simulation/Software only
+    validations:
+      required: true
+
+  - type: dropdown
+    id: test-mode
+    attributes:
+      label: Test Mode
+      description: Was this issue observed in test mode or live mode?
+      options:
+        - TEST_MODE = true (Isolation testing)
+        - TEST_MODE = false (Live CAN connection)
+        - Both modes
+        - Unsure
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is
+      placeholder: "Describe what happened and what you expected to happen"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Detailed steps to reproduce the behavior
+      placeholder: |
+        1. Set TEST_MODE = true
+        2. Upload code to ESP32
+        3. Connect via Bluetooth
+        4. Send command '...'
+        5. Observe unexpected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: "Describe the expected behavior"
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Serial Monitor Output
+      description: Paste relevant output from the Arduino Serial Monitor
+      placeholder: "Paste Serial Monitor output here (please include timestamps if possible)"
+      render: text
+
+  - type: textarea
+    id: bluetooth-logs
+    attributes:
+      label: Bluetooth Communication Logs
+      description: If relevant, include Bluetooth communication logs
+      placeholder: "Paste Bluetooth logs here (from Chigee or test application)"
+      render: text
+
+  - type: dropdown
+    id: vehicle
+    attributes:
+      label: Vehicle (if applicable)
+      description: If testing with a real vehicle, which one?
+      options:
+        - Not applicable (test mode only)
+        - Husqvarna Svartpilen 401
+        - KTM Duke 390
+        - Other KTM model
+        - Other Husqvarna model
+        - Different manufacturer
+    validations:
+      required: false
+
+  - type: input
+    id: vehicle-year
+    attributes:
+      label: Vehicle Year
+      description: If applicable, what year is the vehicle?
+      placeholder: "e.g., 2021"
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here
+      placeholder: "Include photos, diagrams, or additional details that might help"
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched existing issues to ensure this is not a duplicate
+          required: true
+        - label: I have tested this with the latest version of the code
+          required: true
+        - label: I have included all relevant logs and error messages
+          required: true
+        - label: I have verified this issue in isolation mode before any vehicle testing
+          required: true

@@ -1,0 +1,240 @@
+name: Arduino CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  compile:
+    name: Compile Arduino Sketch
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        board:
+          - esp32:esp32:esp32doit-devkit-v1
+          - esp32:esp32:esp32
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Arduino CLI
+      uses: arduino/setup-arduino-cli@v1
+
+    - name: Install ESP32 core
+      run: |
+        arduino-cli core update-index --additional-urls https://dl.espressif.com/dl/package_esp32_index.json
+        arduino-cli core install esp32:esp32 --additional-urls https://dl.espressif.com/dl/package_esp32_index.json
+
+    - name: Install required libraries
+      run: |
+        arduino-cli lib install "mcp_can"
+
+    - name: Compile sketch (Test Mode)
+      run: |
+        arduino-cli compile --fqbn ${{ matrix.board }} src/chigee_obd2_module.ino --verbose
+
+    - name: Check sketch size
+      run: |
+        arduino-cli compile --fqbn ${{ matrix.board }} src/chigee_obd2_module.ino --output-dir build/
+        echo "Sketch size information:"
+        ls -la build/
+
+  safety-check:
+    name: Safety Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Check for safety keywords
+      run: |
+        echo "Checking for proper safety configurations..."
+        
+        # Check that TEST_MODE is enabled by default
+        if grep -q "#define TEST_MODE true" src/chigee_obd2_module.ino; then
+          echo "? TEST_MODE is properly enabled by default"
+        else
+          echo "? WARNING: TEST_MODE should be true by default for safety"
+          exit 1
+        fi
+        
+        # Check for emergency disconnect functionality
+        if grep -q "emergencyDisconnect" src/chigee_obd2_module.ino; then
+          echo "? Emergency disconnect function found"
+        else
+          echo "? WARNING: Emergency disconnect function missing"
+          exit 1
+        fi
+        
+        # Check for safety checks
+        if grep -q "performSafetyChecks" src/chigee_obd2_module.ino; then
+          echo "? Safety check functions found"
+        else
+          echo "? WARNING: Safety check functions missing"
+          exit 1
+        fi
+
+    - name: Check documentation safety warnings
+      run: |
+        echo "Checking documentation for safety warnings..."
+        
+        if grep -q "Safety" README.md; then
+          echo "? Safety information found in README"
+        else
+          echo "? WARNING: Safety information missing from README"
+          exit 1
+        fi
+
+  lint:
+    name: Code Quality Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Check code formatting
+      run: |
+        echo "Checking for basic code quality..."
+        
+        # Check for TODO/FIXME comments
+        if grep -r "TODO\|FIXME" src/; then
+          echo "?? Found TODO/FIXME comments - consider addressing them"
+        fi
+        
+        # Check for debug prints that should be removed
+        if grep -q "Serial.print.*debug\|Serial.print.*DEBUG" src/chigee_obd2_module.ino; then
+          echo "?? Found debug prints - consider removing for production"
+        fi
+        
+        # Check for proper license headers
+        if head -20 src/chigee_obd2_module.ino | grep -q "Copyright\|License\|MIT"; then
+          echo "? License information found"
+        else
+          echo "?? Consider adding license header to source files"
+        fi
+
+  documentation:
+    name: Documentation Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Check required documentation
+      run: |
+        echo "Checking for required documentation files..."
+        
+        required_files=(
+          "README.md"
+          "LICENSE"
+          "CHANGELOG.md"
+          "docs/CONTRIBUTING.md"
+          "docs/PHASE_MANAGEMENT.md"
+          "hardware/README.md"
+        )
+        
+        for file in "${required_files[@]}"; do
+          if [ -f "$file" ]; then
+            echo "? $file exists"
+          else
+            echo "? $file is missing"
+            exit 1
+          fi
+        done
+
+    - name: Check README content
+      run: |
+        echo "Checking README content..."
+        
+        required_sections=(
+          "Features"
+          "Hardware Requirements"
+          "Installation"
+          "Safety"
+          "Testing"
+        )
+        
+        for section in "${required_sections[@]}"; do
+          if grep -q "$section" README.md; then
+            echo "? README contains $section section"
+          else
+            echo "? README missing $section section"
+            exit 1
+          fi
+        done
+
+  phase-validation:
+    name: Phase Management Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Check phase management integration
+      run: |
+        echo "Checking phase management system..."
+        
+        # Check for phase enum
+        if grep -q "enum ProjectPhase" src/chigee_obd2_module.ino; then
+          echo "? ProjectPhase enum found"
+        else
+          echo "? ProjectPhase enum missing"
+          exit 1
+        fi
+        
+        # Check for phase status tracking
+        if grep -q "printProjectStatus" src/chigee_obd2_module.ino; then
+          echo "? Phase status function found"
+        else
+          echo "? Phase status function missing"
+          exit 1
+        fi
+        
+        # Check for phase documentation
+        if [ -f "docs/PHASE_MANAGEMENT.md" ]; then
+          echo "? Phase management documentation exists"
+        else
+          echo "? Phase management documentation missing"
+          exit 1
+        fi
+
+  security:
+    name: Security Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Check for security issues
+      run: |
+        echo "Checking for potential security issues..."
+        
+        # Check for hardcoded passwords
+        if grep -ri "password\|passwd\|secret" src/ --exclude-dir=.git; then
+          echo "?? Found potential hardcoded credentials"
+        fi
+        
+        # Check for unsafe functions
+        if grep -q "strcpy\|sprintf\|gets" src/chigee_obd2_module.ino; then
+          echo "?? Found potentially unsafe C functions"
+        fi
+        
+        # Check for proper input validation
+        if grep -q "SerialBT.read()" src/chigee_obd2_module.ino; then
+          if grep -q "inputString.length()" src/chigee_obd2_module.ino; then
+            echo "? Input length validation found"
+          else
+            echo "?? Consider adding input length validation"
+          fi
+        fi
+
+        echo "Security check completed"

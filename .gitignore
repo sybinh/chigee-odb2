@@ -1,0 +1,62 @@
+# Ignore compiled binaries and build artifacts
+*.o
+*.hex
+*.elf
+*.bin
+*.map
+
+# Ignore Arduino IDE files
+.vscode/
+*.ino.bak
+*_autosave-*
+
+# Ignore OS specific files
+.DS_Store
+Thumbs.db
+
+# Ignore temporary files
+*.tmp
+*.temp
+*~
+
+# Ignore logs
+*.log
+
+# Ignore node modules if any web tools are used
+node_modules/
+
+# Ignore IDE specific files
+*.swp
+*.swo
+.idea/
+*.sublime-*
+
+# Ignore test outputs
+test_output/
+*.test
+
+# Ignore documentation build files
+docs/_build/
+docs/html/
+docs/latex/
+
+# Ignore hardware design files (binary)
+*.brd
+*.sch~
+*.brd~
+
+# Ignore firmware binaries
+firmware/*.bin
+firmware/*.hex
+
+# Ignore personal configuration
+config_personal.h
+wifi_credentials.h
+
+# Ignore debug files
+debug/
+*.debug
+
+# Ignore backup files
+backup/
+*.backup
