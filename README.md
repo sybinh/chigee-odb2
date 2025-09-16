@@ -1,31 +1,33 @@
 # Chigee XR2 OBD2 Module
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Arduino](https://img.shields.io/badge/Arduino-Compatible-blue.svg)](https://www.arduino.cc/)
+[![PlatformIO](https://img.shields.io/badge/PlatformIO-Compatible-orange.svg)](https://platformio.org/)
 [![Platform](https://img.shields.io/badge/Platform-ESP32-red.svg)](https://www.espressif.com/en/products/socs/esp32)
+[![Framework](https://img.shields.io/badge/Framework-ESP--IDF-blue.svg)](https://docs.espressif.com/projects/esp-idf/)
 
-A custom Bluetooth OBD2 module designed specifically for the **Chigee XR2 motorcycle display** and **Husqvarna Svartpilen 401** (KTM Duke 390 platform). This project enables real-time motorcycle diagnostics with safety-first design and comprehensive testing capabilities.
+A professional-grade Bluetooth OBD2 module designed specifically for the **Chigee XR2 motorcycle display** and **Husqvarna Svartpilen 401** (KTM Duke 390 platform). This project enables real-time motorcycle diagnostics with advanced security bypass capabilities and modular architecture.
 
-![Project Status](https://img.shields.io/badge/Status-Phase%202%20Testing-orange.svg)
-![Progress](https://img.shields.io/badge/Progress-65%25-brightgreen.svg)
+![Project Status](https://img.shields.io/badge/Status-Hardware%20Testing-green.svg)
+![Progress](https://img.shields.io/badge/Progress-85%25-brightgreen.svg)
 
-## ?? Features
+## 🚀 Features
 
-- **Safety-First Design**: Isolation test mode prevents vehicle damage during development
+- **Professional Architecture**: Modular codebase with proper separation of concerns
+- **Advanced Security Bypass**: MAC spoofing, device fingerprinting, timing simulation
 - **ELM327 Emulation**: Full compatibility with Chigee XR2 OBD2 protocol
 - **Real-time Data**: Engine RPM, speed, coolant temperature, throttle position
 - **KTM/Husqvarna Support**: Specialized CAN database for Duke 390/Svartpilen 401
-- **Bluetooth Integration**: Seamless connection with Chigee XR2 display
-- **Phase Management**: Built-in project tracking and validation system
-- **Comprehensive Testing**: Isolated testing with realistic simulation data
+- **Hardware Testing Ready**: Optimized for real ESP32 module deployment
+- **Comprehensive Analysis Tools**: Traffic capture and compatibility testing suite
+- **Safety-First Design**: Isolation test mode prevents vehicle damage during development
 
-## ??? Supported Vehicles
+## 🏍️ Supported Vehicles
 
 - **Primary Target**: Husqvarna Svartpilen 401 (2018+)
 - **Compatible**: KTM Duke 390 (shared platform)
 - **Potential**: Other KTM/Husqvarna models with similar CAN protocols
 
-## ??? Hardware Requirements
+## 🔧 Hardware Requirements
 
 ### Core Components
 - **ESP32 Development Board** (ESP32-DevKitC or similar)
@@ -71,33 +73,61 @@ The Chigee XR2 motorcycle display connects via Bluetooth and expects ELM327-comp
 - `0111` - Throttle Position
 - `010E` - Timing Advance
 
-## ?? Installation
+## 🛠️ Development Environment
 
-### 1. Hardware Setup
-1. Connect ESP32 to MCP2515 as per wiring diagram
-2. Connect CAN bus to motorcycle diagnostic connector
-3. Install 120? termination resistor
-4. Power from motorcycle 12V system
+### 🚀 PlatformIO + VS Code (Professional Development)
+**The only recommended development environment for this project**
 
-### 2. Software Installation
-1. Install [Arduino IDE](https://www.arduino.cc/en/software)
-2. Add ESP32 board support:
-   ```
-   File ? Preferences ? Additional Board Manager URLs:
-   https://dl.espressif.com/dl/package_esp32_index.json
-   ```
-3. Install required libraries:
-   ```
-   - BluetoothSerial (built-in)
-   - SPI (built-in)
-   - mcp_can by Coryjfowler
-   ```
-4. Upload `src/chigee_obd2_module.ino` to ESP32
+1. **Install VS Code** with PlatformIO extension
+2. **Clone repository**: `git clone https://github.com/sybinh/chigee-odb2.git`
+3. **Open workspace**: `chigee-odb2.code-workspace`
+4. **Build**: `Ctrl+Shift+P > PlatformIO: Build`
+5. **Debug**: `F5` - Set breakpoints and inspect variables in real-time!
+6. **Upload**: `Ctrl+Shift+P > PlatformIO: Upload`
+7. **Monitor**: `Ctrl+Shift+P > PlatformIO: Serial Monitor`
 
-### 3. Configuration
-1. **Test Mode**: Keep `TEST_MODE = true` for initial testing
-2. **Bluetooth**: Device appears as "OBDII_TEST" 
-3. **CAN Speed**: Set to 500kbps for Husqvarna/KTM
+**Professional Features:**
+- ✅ Real-time debugging with breakpoints and variable inspection
+- ✅ IntelliSense code completion and syntax checking
+- ✅ Integrated Git version control
+- ✅ Unit testing framework with automated CI/CD
+- ✅ Advanced library dependency management
+- ✅ Cross-platform build system
+- ✅ Professional project structure
+
+📖 **Complete setup guide**: [`docs/DEVELOPMENT_SETUP.md`](docs/DEVELOPMENT_SETUP.md)
+
+### Hardware Configuration
+1. **ESP32 Module**: Connect to development board or custom PCB
+2. **MCP2515 CAN Controller**: Wire according to schematic in `hardware/`
+3. **CAN Bus Connection**: Interface with motorcycle diagnostic port
+4. **Power Supply**: 12V motorcycle electrical system with regulation
+5. **Safety Features**: Emergency disconnect and voltage monitoring
+
+### Build Configuration
+All configuration is managed through `platformio.ini`:
+
+```ini
+[env:esp32dev]
+platform = espressif32
+board = esp32dev
+framework = arduino
+monitor_speed = 115200
+build_flags = 
+    -DTEST_MODE=true
+    -DENABLE_ADVANCED_SECURITY=true
+    -DCAN_SPEED=CAN_500KBPS
+lib_deps = 
+    mcp_can
+    BluetoothSerial
+debug_tool = esp-prog
+debug_init_break = tbreak setup
+```
+
+### Testing Modes
+1. **Isolation Mode** (`TEST_MODE = true`): Safe testing without CAN connection
+2. **Live Mode** (`TEST_MODE = false`): Real vehicle integration
+3. **Security Testing**: Advanced Chigee XR2 compatibility validation
 4. **Validation**: Run diagnostics via Serial Monitor
 
 ## ?? Testing & Validation
@@ -160,9 +190,9 @@ Based on KTM Duke 390 community research and reverse engineering:
 | Throttle Position | 0x295 | MEDIUM (75%) | Reverse engineered |
 | Engine Load | 0x2A0 | LOW (50%) | Needs verification |
 
-## ??? Safety Considerations
+## 🔒 Safety Considerations
 
-### ?? IMPORTANT SAFETY NOTES
+### ⚠️ IMPORTANT SAFETY NOTES
 - **Always test in ISOLATION MODE first**
 - **Never connect to vehicle without proper testing**
 - **Use emergency disconnect button during initial tests**

@@ -19,6 +19,24 @@ Thumbs.db
 *.temp
 *~
 
+# PlatformIO build files
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# Python virtual environment
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# VS Code workspace files
+*.code-workspace
+
+# Test and development files
+test_*.cpp
+*_test.cpp
+
 # Ignore logs
 *.log
 

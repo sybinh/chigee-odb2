@@ -3,12 +3,12 @@ contact_links:
   - name: ?? General Discussion
     url: https://github.com/your-username/chigee-obd2-module/discussions
     about: Ask questions, share ideas, or discuss the project with the community
-  - name: ?? Documentation
+  - name: 📚 Documentation
     url: https://github.com/your-username/chigee-obd2-module/tree/main/docs
     about: Read the project documentation for setup guides and technical information
-  - name: ??? Safety Guidelines
+  - name: 🔒 Safety Guidelines
     url: https://github.com/your-username/chigee-obd2-module/blob/main/docs/CONTRIBUTING.md#safety-considerations
     about: Review safety guidelines before working with vehicle electronics
-  - name: ?? Project Status
+  - name: 📊 Project Status
     url: https://github.com/your-username/chigee-obd2-module/blob/main/docs/PHASE_MANAGEMENT.md
     about: Check current project phase and development progress

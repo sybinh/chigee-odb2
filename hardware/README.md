@@ -60,7 +60,7 @@ GPIO0        Boot Button         Programming (built-in)
 EN           Reset Button        System reset (built-in)
 ```
 
-## ??? Vehicle Connection
+## 🔌 Vehicle Connection
 
 ### Husqvarna Svartpilen 401 / KTM Duke 390
 - **Diagnostic Connector**: 6-pin connector under seat
@@ -82,7 +82,7 @@ Pin    Function        Wire Color    Notes
 
 ?? **WARNING**: Always verify pinout with vehicle service manual before connecting!
 
-## ??? Assembly Instructions
+## 🔧 Assembly Instructions
 
 ### 1. PCB Layout (Prototype)
 For breadboard/perfboard assembly:
@@ -148,7 +148,7 @@ For breadboard/perfboard assembly:
 - **Placement**: Avoid metal enclosure interference
 - **Testing**: Verify range with Chigee XR2 in typical mounting position
 
-## ??? Protection Circuits
+## 🛡️ Protection Circuits
 
 ### CAN Bus Protection
 ```
@@ -169,7 +169,7 @@ Vehicle CAN ----[120? Term]----[TVS Diodes]----[Common Mode Choke]----[MCP2515]
 
 ### Requirements
 - **Waterproof**: IP65 minimum for motorcycle use
-- **Temperature**: -20�C to +85�C operating range
+- **Temperature**: -20�C to +85�C operating range
 - **Vibration**: Motorcycle vibration resistant
 - **Size**: Compact for under-seat mounting
 - **Access**: USB port for programming/debugging
