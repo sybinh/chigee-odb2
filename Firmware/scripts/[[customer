@@ -1,0 +1,23 @@
+# <- this is for comment /
+emmc erase.p data
+tftp 0x21000000 customer.ext4_aa
+emmc write.p.continue 0x21000000 data 0x0 0x1400000
+tftp 0x21000000 customer.ext4_ab
+emmc write.p.continue 0x21000000 data 0xA000 0x1400000
+tftp 0x21000000 customer.ext4_ac
+emmc write.p.continue 0x21000000 data 0x14000 0x1400000
+tftp 0x21000000 customer.ext4_ad
+emmc write.p.continue 0x21000000 data 0x1E000 0x1400000
+tftp 0x21000000 customer.ext4_ae
+emmc write.p.continue 0x21000000 data 0x28000 0x1400000
+tftp 0x21000000 customer.ext4_af
+emmc write.p.continue 0x21000000 data 0x32000 0x1400000
+tftp 0x21000000 customer.ext4_ag
+emmc write.p.continue 0x21000000 data 0x3C000 0x1400000
+tftp 0x21000000 customer.ext4_ah
+emmc write.p.continue 0x21000000 data 0x46000 0x1400000
+tftp 0x21000000 customer.ext4_ai
+emmc write.p.continue 0x21000000 data 0x50000 0x1400000
+tftp 0x21000000 customer.ext4_aj
+emmc write.p.continue 0x21000000 data 0x5A000 0x1400000
+% <- this is end of file symbol

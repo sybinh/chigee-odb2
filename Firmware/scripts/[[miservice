@@ -1,0 +1,5 @@
+# <- this is for comment /
+tftp 0x21000000 miservice.ext4
+emmc erase.p usera
+emmc write.p 0x21000000 usera 0x1400000
+% <- this is end of file symbol

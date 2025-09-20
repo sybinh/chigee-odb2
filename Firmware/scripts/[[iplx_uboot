@@ -1,0 +1,7 @@
+# <- this is for comment / total file size must be less than 4KB
+mmc bootbus 0 1 0 0
+mmc partconf 0 0 1 1
+tftp 0x21000000 boot/BOOT_PART.bin
+mmc write 0x21000000 0x0 0x800
+mmc partconf 0 0 1 0
+% <- this is end of file symbol

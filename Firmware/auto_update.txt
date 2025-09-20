@@ -1,0 +1,12 @@
+estar scripts/init_emmc
+estar scripts/[[iplx_uboot
+ estar scripts/[[kernel
+ estar scripts/[[rootfs
+ estar scripts/[[misc
+ estar scripts/[[miservice
+ estar scripts/[[customer
+
+estar scripts/set_config
+saveenv
+printenv
+reset

@@ -1,0 +1,7 @@
+# <- this is for comment / total file size must be less than 4KB
+emmc erase.p kernela
+tftp 0x21000000 kernel
+emmc write.p 0x21000000 kernela ${filesize}
+setenv bootcmd 'bootlogo 0 0 0 0; emmc read.p 0x22000000 kernela 0xA00000 ;bootm 0x22000000;
+saveenv
+% <- this is end of file symbol

@@ -1,0 +1,5 @@
+# <- this is for comment / total file size must be less than 4KB
+emmc erase.p misca
+tftp 0x21000000 misc.fwfs
+emmc write.p 0x21000000 misca ${filesize}
+% <- this is end of file symbol

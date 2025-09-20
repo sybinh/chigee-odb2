@@ -1,0 +1,7 @@
+# <- this is for comment /
+emmc erase.p rootfsa
+tftp 0x21000000 rootfs.ext4_aa
+emmc write.p.continue 0x21000000 rootfsa 0x0 0x1400000
+tftp 0x21000000 rootfs.ext4_ab
+emmc write.p.continue 0x21000000 rootfsa 0xA000 0x1400000
+% <- this is end of file symbol

@@ -42,7 +42,7 @@ A custom ESP32 BLE OBD-II server that connects directly to **Chigee XR-2 motorcy
 This is a **pure software solution** - no CAN shields, resistors, or vehicle wiring required!
 
 ```
-┌─────────────┐    BLE Connection     ┌─────────────┐
+┌─────────────┐    BLE Connection    ┌─────────────┐
 │   XR-2      │ ←─────────────────→  │   ESP32     │
 │ (Display)   │   UUID: 30312d30-... │ (OBD Server)│
 │ C0:76:5A:.. │                      │ CGOBD-5F72  │

@@ -1,0 +1,4 @@
+# <- this is for comment / total file size must be less than 4KB
+setenv bootargs ' console=ttyS0,115200 root=/dev/mmcblk0p2 rootwait rootfstype=ext4 rw init=/linuxrc LX_MEM=0xffe0000 mma_heap=mma_heap_name0,miu=0,sz=0x9800000 mma_memblock_remove=1 cma=2M@0x23800000 mmap_reserved=fb,miu=0,sz=0x800000,max_start_off=0xF700000,max_end_off=0xFF00000 loglevel=3
+saveenv
+% <- this is end of file symbol

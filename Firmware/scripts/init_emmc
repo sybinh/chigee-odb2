@@ -1,0 +1,11 @@
+# <- this is for comment / create emmc partition
+emmc erase
+emmc create kernela 0xA00000 
+emmc create rootfsa 0xC800000 
+emmc create misca 0xA00000 
+emmc create usera 0xA00000 
+emmc create data 0x12C00000 
+emmc create par 0xA00000 
+emmc create chigee 0x710000000 
+
+% <- this is end of file symbol

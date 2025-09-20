@@ -8,7 +8,7 @@ from bleak import BleakScanner, BleakClient
 
 async def scan_devices():
     """Scan for BLE devices"""
-    print("🔍 Scanning for BLE devices...")
+    print("[SCANNING] for BLE devices...")
     print("=" * 50)
     
     devices = await BleakScanner.discover(timeout=10)
@@ -21,7 +21,7 @@ async def scan_devices():
         mac = device.address
         rssi = getattr(device, 'rssi', 'N/A')
         
-        print(f"📱 Device: {name}")
+        print(f"[DEVICE] {name}")
         print(f"   MAC: {mac}")
         print(f"   RSSI: {rssi}")
         print()
@@ -37,18 +37,18 @@ async def scan_devices():
             esp32_found = True
     
     print("=" * 50)
-    print(f"✅ Chigee XR-2: {'Found' if chigee_found else 'Not found'}")
-    print(f"✅ ESP32 CGOBD: {'Found' if esp32_found else 'Not found'}")
+    print(f"[OK] Chigee XR-2: {'Found' if chigee_found else 'Not found'}")
+    print(f"[OK] ESP32 CGOBD: {'Found' if esp32_found else 'Not found'}")
     
     return devices
 
 async def connect_and_monitor(mac_address):
     """Connect to device and monitor GATT traffic"""
-    print(f"\n🔗 Connecting to {mac_address}...")
+    print(f"\n[CONNECTING] to {mac_address}...")
     
     try:
         async with BleakClient(mac_address) as client:
-            print(f"✅ Connected to {mac_address}")
+            print(f"[CONNECTED] to {mac_address}")
             
             # Get services
             services = client.services
@@ -62,10 +62,10 @@ async def connect_and_monitor(mac_address):
                     print(f"    Properties: {', '.join(properties)}")
             
             # Monitor notifications
-            print("\n👂 Monitoring notifications (Press Ctrl+C to stop)...")
+            print("\n[MONITORING] notifications (Press Ctrl+C to stop)...")
             
             def notification_handler(sender, data):
-                print(f"📨 Notification from {sender}: {data.hex()}")
+                print(f"[NOTIFICATION] From {sender}: {data.hex()}")
                 print(f"   ASCII: {''.join(chr(b) if 32 <= b <= 126 else '.' for b in data)}")
             
             # Subscribe to notifications
@@ -74,20 +74,20 @@ async def connect_and_monitor(mac_address):
                     if "notify" in [str(prop).lower() for prop in char.properties]:
                         try:
                             await client.start_notify(char.uuid, notification_handler)
-                            print(f"✅ Subscribed to notifications from {char.uuid}")
+                            print(f"[SUBSCRIBED] to notifications from {char.uuid}")
                         except Exception as e:
-                            print(f"❌ Failed to subscribe to {char.uuid}: {e}")
+                            print(f"[ERROR] Failed to subscribe to {char.uuid}: {e}")
             
             # Keep connection alive
             while True:
                 await asyncio.sleep(1)
                 
     except Exception as e:
-        print(f"❌ Connection failed: {e}")
+        print(f"[ERROR] Connection failed: {e}")
 
 async def main():
     """Main function"""
-    print("🚀 BLE Traffic Monitor for Chigee XR-2 ↔ ESP32")
+    print("BLE Traffic Monitor for Chigee XR-2 <-> ESP32")
     print("=" * 60)
     
     # Scan first
@@ -110,11 +110,11 @@ async def main():
                 selected_device = devices[device_idx]
                 await connect_and_monitor(selected_device.address)
             else:
-                print("❌ Invalid selection")
+                print("[ERROR] Invalid selection")
         except (ValueError, KeyboardInterrupt):
             print("\n👋 Goodbye!")
     else:
-        print("❌ No devices found")
+        print("[ERROR] No devices found")
 
 if __name__ == "__main__":
     try:
