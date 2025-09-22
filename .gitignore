@@ -19,8 +19,11 @@ Thumbs.db
 *.temp
 *~
 
-# Archive directory for old test files
-archive/
+# Archive directory for old test files (root level only)
+/archive/
+
+# Allow docs/archive for documentation
+!docs/archive/
 
 # Firmware directory (contains large files)
 Firmware/
