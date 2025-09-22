@@ -19,6 +19,9 @@ Thumbs.db
 *.temp
 *~
 
+# Archive directory for old test files
+archive/
+
 # PlatformIO build files
 .pio/
 .pioenvs/
