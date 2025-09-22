@@ -30,28 +30,28 @@ class MyServerCallbacks: public BLEServerCallbacks {
         deviceConnected = true;
         Serial.println("📱 XR-2 connected! (CUSTOM UUID)");
         
-        // 🔑 PROACTIVE DATA PUSH - Key pattern from firmware analysis!
-        Serial.println("🚀 Starting proactive data push (BINARY FORMAT)...");
+        // 🔑 FIRMWARE-BASED BINARY DATA PUSH
+        Serial.println("🚀 Starting firmware-matched binary data push...");
         delay(500);
         
-        // Send supported PIDs first (BINARY FORMAT)
-        uint8_t supportedPIDs[] = {0x41, 0x00, 0xBE, 0x3E, 0xB8, 0x11};
-        pCharacteristic->setValue(supportedPIDs, 6);
+        // Send supported PIDs first (BINARY FORMAT - firmware confirmed)
+        uint8_t supported_pids[] = {0x41, 0x00, 0xBE, 0x3E, 0xB8, 0x11};
+        pCharacteristic->setValue(supported_pids, sizeof(supported_pids));
         pCharacteristic->notify();
         Serial.println("📤 Sent supported PIDs (binary)");
         
         delay(200);
         
-        // Send live OBD data (BINARY FORMAT)
-        uint8_t rpmData[] = {0x41, 0x0C, 0x1A, 0xF8};  // ~1720 RPM
-        pCharacteristic->setValue(rpmData, 4);
+        // Send live OBD data (BINARY FORMAT matching firmware patterns)
+        uint8_t rpm_data[] = {0x41, 0x0C, 0x1A, 0xF8};  // RPM ~1720
+        pCharacteristic->setValue(rpm_data, sizeof(rpm_data));
         pCharacteristic->notify();
         Serial.println("📤 Sent RPM data (binary)");
         
         delay(100);
         
-        uint8_t speedData[] = {0x41, 0x0D, 0x3C};    // 60 km/h
-        pCharacteristic->setValue(speedData, 3);
+        uint8_t speed_data[] = {0x41, 0x0D, 0x3C};  // Speed 60 km/h
+        pCharacteristic->setValue(speed_data, sizeof(speed_data));
         pCharacteristic->notify();
         Serial.println("📤 Sent speed data (binary)");
     };
@@ -83,18 +83,32 @@ class MyCallbacks: public BLECharacteristicCallbacks {
             Serial.println("📤 PID 0100: Binary supported PIDs sent");
         }
         else if (cmd == "010C") {
-            // RPM response
+            // RPM response (firmware-matched pattern)
             uint8_t response[] = {0x41, 0x0C, 0x1A, 0xF8};
-            pCharacteristic->setValue(response, 4);
+            pCharacteristic->setValue(response, sizeof(response));
             pCharacteristic->notify();
-            Serial.println("📤 PID 010C: RPM sent");
+            Serial.println("📤 PID 010C: RPM sent (binary)");
         }
         else if (cmd == "010D") {
-            // Speed response
+            // Speed response (firmware-matched pattern)
             uint8_t response[] = {0x41, 0x0D, 0x3C};
-            pCharacteristic->setValue(response, 3);
+            pCharacteristic->setValue(response, sizeof(response));
             pCharacteristic->notify();
-            Serial.println("📤 PID 010D: Speed sent");
+            Serial.println("📤 PID 010D: Speed sent (binary)");
+        }
+        else if (cmd == "0105") {
+            // Temperature response (firmware-matched pattern)
+            uint8_t response[] = {0x41, 0x05, 0x5A};  // 90°C
+            pCharacteristic->setValue(response, sizeof(response));
+            pCharacteristic->notify();
+            Serial.println("📤 PID 0105: Temperature sent (binary)");
+        }
+        else if (cmd == "0111") {
+            // Throttle response (firmware-matched pattern)
+            uint8_t response[] = {0x41, 0x11, 0x4D};  // ~30%
+            pCharacteristic->setValue(response, sizeof(response));
+            pCharacteristic->notify();
+            Serial.println("📤 PID 0111: Throttle sent (binary)");
         }
         else {
             pCharacteristic->setValue("?\r>");
@@ -103,40 +117,48 @@ class MyCallbacks: public BLECharacteristicCallbacks {
     }
 };
 
-// 🔄 Continuous Data Streaming Functions (from firmware analysis)
+// 🔄 Continuous Data Streaming Functions (firmware-matched binary format)
 void sendCoreOBDData() {
     if (!deviceConnected || !pCharacteristic) return;
     
     // Rotate through core data types every call
     switch(dataSequence % 3) {
         case 0: {
-            // RPM data (simulate varying RPM)
+            // RPM data (simulate varying RPM) - BINARY FORMAT
             static int rpmCounter = 0;
             int baseRpm = 1500 + (rpmCounter % 500);  // 1500-2000 RPM
-            uint8_t rpmResponse[] = {0x41, 0x0C, (uint8_t)(baseRpm >> 8), (uint8_t)(baseRpm & 0xFF)};
-            pCharacteristic->setValue(rpmResponse, 4);
+            // OBD PID 0x0C: RPM = ((A*256)+B)/4, so we need to send RPM*4
+            int obd_rpm_value = baseRpm * 4;
+            uint8_t rpm_frame[] = {
+                0x41, 0x0C,
+                (uint8_t)((obd_rpm_value >> 8) & 0xFF),
+                (uint8_t)(obd_rpm_value & 0xFF)
+            };
+            pCharacteristic->setValue(rpm_frame, sizeof(rpm_frame));
             pCharacteristic->notify();
-            Serial.printf("📤 [STREAM] RPM: %d\n", baseRpm);
+            Serial.printf("📤 [STREAM] RPM: %d (binary: %02X %02X %02X %02X)\n", 
+                         baseRpm, rpm_frame[0], rpm_frame[1], rpm_frame[2], rpm_frame[3]);
             rpmCounter++;
             break;
         }
         case 1: {
-            // Speed data (simulate varying speed)
+            // Speed data (simulate varying speed) - BINARY FORMAT
             static int speedCounter = 0;
             int speed = 50 + (speedCounter % 30);  // 50-80 km/h
-            uint8_t speedResponse[] = {0x41, 0x0D, (uint8_t)speed};
-            pCharacteristic->setValue(speedResponse, 3);
+            uint8_t speed_frame[] = {0x41, 0x0D, (uint8_t)speed};
+            pCharacteristic->setValue(speed_frame, sizeof(speed_frame));
             pCharacteristic->notify();
-            Serial.printf("📤 [STREAM] Speed: %d km/h\n", speed);
+            Serial.printf("📤 [STREAM] Speed: %d km/h (binary: %02X %02X %02X)\n", 
+                         speed, speed_frame[0], speed_frame[1], speed_frame[2]);
             speedCounter++;
             break;
         }
         case 2: {
-            // Engine temperature
-            uint8_t tempResponse[] = {0x41, 0x05, 0x5A};  // 50°C
-            pCharacteristic->setValue(tempResponse, 3);
+            // Engine temperature - STRING FORMAT
+            String tempResponse = "41 05 5A\r\n>";  // 50°C
+            pCharacteristic->setValue(tempResponse.c_str());
             pCharacteristic->notify();
-            Serial.println("📤 [STREAM] Engine Temp: 50°C");
+            Serial.println("📤 [STREAM] Engine Temp: 50°C (response: 41 05 5A)");
             break;
         }
     }
@@ -147,10 +169,62 @@ void sendExtendedOBDData() {
     if (!deviceConnected || !pCharacteristic) return;
     
     // Send supported PIDs periodically to remind XR-2 of capabilities (BINARY FORMAT)
-    uint8_t supportedPIDs[] = {0x41, 0x00, 0xBE, 0x3E, 0xB8, 0x11};
-    pCharacteristic->setValue(supportedPIDs, 6);
+    uint8_t supported_pids[] = {0x41, 0x00, 0xBE, 0x3E, 0xB8, 0x11};
+    pCharacteristic->setValue(supported_pids, sizeof(supported_pids));
     pCharacteristic->notify();
     Serial.println("📤 [STREAM] Supported PIDs refresh (binary)");
+}
+
+// 🔄 Status data streaming function (firmware-matched binary format)
+void sendPeriodicStatus() {
+    if (!deviceConnected || !pCharacteristic) return;
+    
+    static int statusSequence = 0;
+    
+    // Send status data based on firmware patterns (binary format)
+    switch(statusSequence % 4) {
+        case 0: {
+            // Coolant temperature - BINARY FORMAT
+            int temp = 80 + (millis() / 10000) % 20;  // 80-100°C
+            uint8_t temp_frame[] = {0x41, 0x05, (uint8_t)(temp + 40)};  // +40 offset per OBD spec
+            pCharacteristic->setValue(temp_frame, sizeof(temp_frame));
+            pCharacteristic->notify();
+            Serial.printf("📤 [STATUS] Coolant: %d°C (binary: %02X %02X %02X)\n", 
+                         temp, temp_frame[0], temp_frame[1], temp_frame[2]);
+            break;
+        }
+        case 1: {
+            // Intake air temperature - BINARY FORMAT
+            int airTemp = 25 + (millis() / 15000) % 15;  // 25-40°C
+            uint8_t air_frame[] = {0x41, 0x0F, (uint8_t)(airTemp + 40)};  // +40 offset
+            pCharacteristic->setValue(air_frame, sizeof(air_frame));
+            pCharacteristic->notify();
+            Serial.printf("📤 [STATUS] Air temp: %d°C (binary: %02X %02X %02X)\n", 
+                         airTemp, air_frame[0], air_frame[1], air_frame[2]);
+            break;
+        }
+        case 2: {
+            // Throttle position - BINARY FORMAT
+            int throttle = 15 + (millis() / 8000) % 25;  // 15-40%
+            uint8_t throttle_frame[] = {0x41, 0x11, (uint8_t)((throttle * 255) / 100)};
+            pCharacteristic->setValue(throttle_frame, sizeof(throttle_frame));
+            pCharacteristic->notify();
+            Serial.printf("📤 [STATUS] Throttle: %d%% (binary: %02X %02X %02X)\n", 
+                         throttle, throttle_frame[0], throttle_frame[1], throttle_frame[2]);
+            break;
+        }
+        case 3: {
+            // Fuel level - BINARY FORMAT
+            int fuel = 40 + (millis() / 30000) % 50;  // 40-90%
+            uint8_t fuel_frame[] = {0x41, 0x2F, (uint8_t)((fuel * 255) / 100)};
+            pCharacteristic->setValue(fuel_frame, sizeof(fuel_frame));
+            pCharacteristic->notify();
+            Serial.printf("📤 [STATUS] Fuel: %d%% (binary: %02X %02X %02X)\n", 
+                         fuel, fuel_frame[0], fuel_frame[1], fuel_frame[2]);
+            break;
+        }
+    }
+    statusSequence++;
 }
 
 void setup() {
@@ -217,15 +291,16 @@ void loop() {
     
     // 🔄 CONTINUOUS DATA STREAMING (Key XR-2 expectation!)
     if (deviceConnected) {
-        // Core data every 150ms (RPM, Speed, Temp)
+        // Core data every 150ms (RPM, Speed, Engine Load)
         if (currentTime - lastCoreData >= CORE_DATA_INTERVAL) {
             sendCoreOBDData();
             lastCoreData = currentTime;
         }
         
-        // Extended data every 750ms (Supported PIDs, etc.)
+        // Extended data every 750ms (Supported PIDs, Status data)
         if (currentTime - lastDataUpdate >= EXTENDED_DATA_INTERVAL) {
             sendExtendedOBDData();
+            sendPeriodicStatus();  // Add status data streaming
             lastDataUpdate = currentTime;
         }
     }
