@@ -22,6 +22,9 @@ Thumbs.db
 # Archive directory for old test files
 archive/
 
+# Firmware directory (contains large files)
+Firmware/
+
 # PlatformIO build files
 .pio/
 .pioenvs/
