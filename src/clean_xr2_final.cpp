@@ -31,29 +31,29 @@ class MyServerCallbacks: public BLEServerCallbacks {
         Serial.println("📱 XR-2 connected! (CUSTOM UUID)");
         
         // 🔑 PROACTIVE DATA PUSH - Key pattern from firmware analysis!
-        Serial.println("🚀 Starting proactive data push...");
+        Serial.println("🚀 Starting proactive data push (BINARY FORMAT)...");
         delay(500);
         
-        // Send supported PIDs first
-        String supportedPIDs = "41 00 BE 3E B8 11";
-        pCharacteristic->setValue(supportedPIDs.c_str());
+        // Send supported PIDs first (BINARY FORMAT)
+        uint8_t supportedPIDs[] = {0x41, 0x00, 0xBE, 0x3E, 0xB8, 0x11};
+        pCharacteristic->setValue(supportedPIDs, 6);
         pCharacteristic->notify();
-        Serial.println("📤 Sent supported PIDs: " + supportedPIDs);
+        Serial.println("📤 Sent supported PIDs (binary)");
         
         delay(200);
         
-        // Send live OBD data
-        String rpmData = "41 0C 1A F8";  // ~1720 RPM
-        pCharacteristic->setValue(rpmData.c_str());
+        // Send live OBD data (BINARY FORMAT)
+        uint8_t rpmData[] = {0x41, 0x0C, 0x1A, 0xF8};  // ~1720 RPM
+        pCharacteristic->setValue(rpmData, 4);
         pCharacteristic->notify();
-        Serial.println("📤 Sent RPM data: " + rpmData);
+        Serial.println("📤 Sent RPM data (binary)");
         
         delay(100);
         
-        String speedData = "41 0D 3C";    // 60 km/h
-        pCharacteristic->setValue(speedData.c_str());
+        uint8_t speedData[] = {0x41, 0x0D, 0x3C};    // 60 km/h
+        pCharacteristic->setValue(speedData, 3);
         pCharacteristic->notify();
-        Serial.println("📤 Sent speed data: " + speedData);
+        Serial.println("📤 Sent speed data (binary)");
     };
 
     void onDisconnect(BLEServer* pServer) {
@@ -146,11 +146,11 @@ void sendCoreOBDData() {
 void sendExtendedOBDData() {
     if (!deviceConnected || !pCharacteristic) return;
     
-    // Send supported PIDs periodically to remind XR-2 of capabilities
-    String supportedPIDs = "41 00 BE 3E B8 11";
-    pCharacteristic->setValue(supportedPIDs.c_str());
+    // Send supported PIDs periodically to remind XR-2 of capabilities (BINARY FORMAT)
+    uint8_t supportedPIDs[] = {0x41, 0x00, 0xBE, 0x3E, 0xB8, 0x11};
+    pCharacteristic->setValue(supportedPIDs, 6);
     pCharacteristic->notify();
-    Serial.println("📤 [STREAM] Supported PIDs refresh");
+    Serial.println("📤 [STREAM] Supported PIDs refresh (binary)");
 }
 
 void setup() {
